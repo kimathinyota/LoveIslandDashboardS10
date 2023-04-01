@@ -33,8 +33,7 @@ def fetch_islanders_from_wikipedia(link="https://en.wikipedia.org/wiki/Love_Isla
     contestants = pd.DataFrame(contestants[0])
     return contestants
 
-# This method may need to be updated depending on edit
-# (16/02/2022): Currently cleaning based on how wikipedia looks on:
+# This method may need to be updated depending on wikipedia edit
 # https://en.wikipedia.org/wiki/Love_Island_(2015_TV_series,_series_9)
 def clean_islanders_dataframe_from_wikipedia(contestants):
     # Remove nulls and only keep necessary fields

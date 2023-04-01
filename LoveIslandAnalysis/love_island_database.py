@@ -1,6 +1,4 @@
-
 import mysql.connector
-# from pypika import Query, Table, Field
 from LoveIslandAnalysis.PostFetcher import get_schemas
 COMMENT_SCHEMA, POST_SCHEMA, POLL_SCHEMA, POLL_OPTIONS_SCHEMA = get_schemas()
 import datetime
@@ -41,9 +39,9 @@ class LIDatabaseManager:
         self.mydb.commit()
         self.close()
         print("Executed:", str(len(succ)) + "/" + str(len(queries)))
-        # if print_full:
-        #     print("Finished executing queries:", succ)
-        #     print("Failed executing queries:", failed)
+        if print_full:
+            print("Finished executing queries:", succ)
+            print("Failed executing queries:", failed)
 
     def execute_query(self, sql):
         if not self.is_connected:
