@@ -2,7 +2,6 @@
 import mysql.connector
 import pandas as pd
 
-from LoveIslandAnalysis.authenticate import authenticate_love_island
 from LoveIslandAnalysis.PostFetcher import search_subreddit
 from datetime import datetime, timedelta
 import numpy as np
