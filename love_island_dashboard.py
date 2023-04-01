@@ -44,8 +44,6 @@ import LoveIslandAnalysis.Mentions as lm
 from LoveIslandAnalysis.Islanders import fetch_and_clean_islanders_from_wikipedia
 import LoveIslandDashboard.DataLoader as LIDataLoader
 from altair import datum
-from nltk.sentiment.vader import SentimentIntensityAnalyzer as SIA
-
 from LoveIslandDashboard.AnalyticsLoader import AnalyticsLoader
 
 
