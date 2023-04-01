@@ -1,0 +1,5 @@
+networkx
+nx_altair
+pandas
+numpy
+altair == 4.2.2
