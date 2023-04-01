@@ -38,7 +38,6 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 import altair as alt
-from streamlit_elements import elements, mui, html
 import networkx as nx
 import nx_altair as nxa
 import LoveIslandAnalysis.Mentions as lm
