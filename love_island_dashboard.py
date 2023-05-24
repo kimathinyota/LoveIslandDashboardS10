@@ -184,27 +184,51 @@ picked_days_list = list(range(picked_days[0], picked_days[1] + 1, 1))
 
 # raws_tab.write(post_df[['createdDate', 'title', 'type', 'selfText', 'score', 'AuthorName', 'permalink', 'insertionTimestamp']])
 
+apply_filters = raws_tab.checkbox('Apply filters')
 
-display_post = post_df[['createdDate', 'title', 'type', 'selfText', 'score', 'AuthorName', 'permalink', 'insertionTimestamp']]
-display_post.columns =['Date', 'Title', 'Type of Discussion Thread', 'Text', 'Score', 'Author\'s username', 'Permalink', 'Date Inserted (to db)']
+
+
+display_post = post_df[['type', 'createdDate', 'title', 'selfText', 'score', 'AuthorName', 'permalink', 'insertionTimestamp']]
+display_post.columns =['Type of Discussion Thread', 'Date', 'Title', 'Text', 'Score', 'Author\'s username', 'Permalink', 'Date Inserted (to db)']
 
 display_post['Date'] = pd.to_datetime(display_post['Date'], unit='s')
+display_post['Day'] = (display_post["Date"] - pd.to_datetime('2023-1-16')).dt.days + 1
 display_post['Date Inserted (to db)'] = pd.to_datetime(display_post['Date Inserted (to db)'], unit='s')
+display_post = display_post.loc[:,['Day', 'Type of Discussion Thread', 'Date', 'Title', 'Text', 'Score', 'Author\'s username', 'Permalink', 'Date Inserted (to db)']]
 
-display_comment = comment_df[['createdDate', 'body', 'score', 'compound', 'AuthorName', 'permalink', 'insertionTimestamp']]
-display_comment.columns=['Date', 'Text', 'Score', 'Sentiment Score', 'Author\'s username', 'Permalink', 'Date Inserted (to db)']
+display_comment = comment_df[['day', 'createdDate', 'body', 'score', 'compound', 'AuthorName', 'permalink', 'insertionTimestamp']]
+display_comment.columns=['Day', 'Date', 'Text', 'Score', 'Sentiment Score', 'Author\'s username', 'Permalink', 'Date Inserted (to db)']
+
 
 display_comment['Date'] = pd.to_datetime(display_comment['Date'], unit='s')
 display_comment['Date Inserted (to db)'] = pd.to_datetime(display_comment['Date Inserted (to db)'], unit='s')
 
+display_islanders = islanders_df
+if apply_filters:
+    display_islanders = display_islanders.loc[islanders_df.Islander.isin(picked_islanders)]
+    display_post = display_post.loc[display_post.Day.isin(picked_days_list)]
+    display_comment = display_comment.loc[display_comment.Day.isin(picked_days_list)]
+    display_summaries_df = summaries_df.loc[summaries_df.Islanders.isin(picked_islanders) & summaries_df.Day.isin(picked_days_list)].groupby(['Type', 'Summary', 'Day']).agg({'Islanders': list}).reset_index().loc[:, ['Day', 'Type', 'Summary', 'Islanders']].sort_values('Day').reset_index()
+else:
+    display_summaries_df = summaries_df.groupby(['Type', 'Summary', 'Day']).agg({'Islanders': list}).reset_index().loc[:, ['Day', 'Type', 'Summary', 'Islanders']].sort_values('Day').reset_index()
+
+
+
 raws_tab.subheader('Islanders')
-raws_tab.write(islanders_df)
+raws_tab.write(display_islanders)
+raws_tab.caption('Data extracted from https://en.wikipedia.org/wiki/Love_Island_(2015_TV_series,_series_9)')
 
 raws_tab.subheader('Posts')
 raws_tab.write(display_post)
+raws_tab.caption('Data fetched from r/LoveIslandTV via [PRAW](https://praw.readthedocs.io/en/stable/)')
 
 raws_tab.subheader('Comments')
 raws_tab.write(display_comment)
+raws_tab.caption('Data fetched from r/LoveIslandTV via [PRAW](https://praw.readthedocs.io/en/stable/)')
+
+raws_tab.subheader('Events')
+raws_tab.write(display_summaries_df)
+raws_tab.caption('Data extracted from https://en.wikipedia.org/wiki/Love_Island_(2015_TV_series,_series_9)')
 
 
 

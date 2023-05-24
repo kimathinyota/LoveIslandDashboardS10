@@ -10,3 +10,4 @@ LoveIslandDashboard/__pycache__/GeneralCharts.cpython-39.pyc
 LoveIslandDashboard/__pycache__/Mentions.cpython-39.pyc
 LoveIslandDashboard/__pycache__/Sentiments.cpython-39.pyc
 .streamlit/secrets.toml
+LoveIslandAnalysis/.DS_Store
