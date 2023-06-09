@@ -50,10 +50,10 @@ def create_interactive_influence_graph(filtered_edge_df_by_day, islander_to_cent
     chart_edges = chart.layer[0]
     chart_nodes = chart.layer[1]
 
-    pick_name = alt.selection_point(fields=['name'],  value=[{'name': most_central_islander}], empty='none')
+    pick_name = alt.selection_single(fields=['name'],  init={'name': most_central_islander}, empty='none')
     chart_nodes = chart_nodes.encode(
         opacity = alt.condition(pick_name, alt.value(1.0), alt.value(0.15))
-    ).add_params(
+    ).add_selection(
         pick_name
     )
 
