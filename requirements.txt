@@ -1,8 +1,8 @@
 networkx
+altair == 5.0.1
 nx_altair
 pandas
 numpy
-altair == 4.2.2
 beautifulsoup4
 mysql-connector-python
 praw
