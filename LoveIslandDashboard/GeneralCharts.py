@@ -7,14 +7,14 @@ from altair import datum
 
 def createGeneralisedErrorChart(general_mean_std_by_day, y_value_title, slider_min=0.05, slider_max=10, slider_step=0.1, slider_name='multiple of std: ', day_name='day'):
     general_std_slider = alt.binding_range(min=slider_min, max=slider_max, step=slider_step, name=slider_name)
-    general_std_selector = alt.selection_single(fields=['cutoff'],
-                                bind=general_std_slider, init={'cutoff': 2})
+    general_std_selector = alt.selection_point(fields=['cutoff'],
+                                bind=general_std_slider, value=[{'cutoff': 2}])
 
 
     general_error_base = alt.Chart(general_mean_std_by_day.reset_index()).transform_calculate(
         lower=datum.mean - general_std_selector.cutoff*datum.std,
         upper=datum.mean + general_std_selector.cutoff*datum.std,
-    ).add_selection(
+    ).add_params(
         general_std_selector
     )
 
@@ -37,7 +37,7 @@ def createGeneralisedErrorChart(general_mean_std_by_day, y_value_title, slider_m
 import re
 
 def createGeneralisedBarAndLineGraphsFromMelt(daily_x_including_average_melted, value_name, agg_func_str, picked_days, should_include_average, value_title=None, var_name='day'):
-    islander_selection = alt.selection_multi(fields=['Islanders'])
+    islander_selection = alt.selection_point(fields=['Islanders'])
 
     # initial_chart = alt.Chart(addm).transform_fold(
     #     picked_islanders + ['Average'],
@@ -66,8 +66,8 @@ def createGeneralisedBarAndLineGraphsFromMelt(daily_x_including_average_melted, 
         y='Islanders:N',
         color='Islanders:N',
         opacity = alt.condition(islander_selection, alt.value(1.0), alt.value(0.3))
-    ).properties(
-        selection=islander_selection
+    ).add_params(
+        islander_selection
     ).interactive()
 
     value_title = value_name if value_title is None else value_title
