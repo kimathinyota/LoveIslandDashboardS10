@@ -9,7 +9,7 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer as SIA
 def load_comments():
     comment_df = pd.read_csv('LoveIslandDashboard/Data/Comment_inc_sentiments_2023-01-16_2023-03-24.csv')
     comment_df["date"] = pd.to_datetime(comment_df.createdDate, unit='s')
-    comment_df['day'] = (comment_df["date"] - pd.to_datetime('2023-1-16')).dt.days + 1
+    comment_df['day'] = (comment_df["date"] - pd.to_datetime('2023-6-10')).dt.days + 1
     return comment_df
 
 def load_posts():
