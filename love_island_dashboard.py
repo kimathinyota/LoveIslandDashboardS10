@@ -52,7 +52,7 @@ from LoveIslandDashboard.AnalyticsLoader import AnalyticsLoader
 #********** PAGE TITLE ************** 
 #************************************ 
 st.header('Love Island: Ask the redditors')
-st.caption('Analysis of Season 9\'s Discussion Threads in r/LoveIslandTV')
+st.caption('Analysis of Season 10\'s Discussion Threads in r/LoveIslandTV')
 #************************************
 #********** LOADING DATA ************ 
 #************************************ 
