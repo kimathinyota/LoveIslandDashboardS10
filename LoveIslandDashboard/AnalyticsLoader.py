@@ -22,8 +22,8 @@ class AnalyticsLoader:
         return exists(AnalyticsLoader.COMENTIONS_DATA_PATH)
 
 
-    def replace_mentions_data(self, nicknames_dict=None):
-        name_dict, mentions_over_time = lm.mentions_data(self.islanders_df, self.comments_df, nicknames_dict)
+    def replace_mentions_data(self):
+        name_dict, mentions_over_time = lm.mentions_data(self.islanders_df, self.comments_df, self.nicknames_dict)
         mentions_over_time.to_csv(AnalyticsLoader.MENTIONS_DATA_PATH, index=True)
         return mentions_over_time
 
@@ -73,12 +73,13 @@ class AnalyticsLoader:
         return temp
 
 
-    def __init__(self, islanders_df, comments_df):
+    def __init__(self, islanders_df, comments_df, nicknames_dict=None):
         self.islanders_df = islanders_df
         self.comments_df = comments_df
         self.mentions_data_cache = None
         self.comentions_data_cache = None
         self.encoder = IslanderEncoder(islanders_df)
+        self.nicknames_dict=nicknames_dict
 
 
 class IslanderEncoder:
