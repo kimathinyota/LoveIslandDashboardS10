@@ -1,6 +1,6 @@
 
 # Use to fetch latest Islander information from updating Wikipedia table at:
-# Source: "https://en.wikipedia.org/wiki/Love_Island_(2015_TV_series,_series_9)"
+# Source: "https://en.wikipedia.org/wiki/Love_Island_(2015_TV_series,_series_10)"
 
 # requests for handling HTTP requests
 import requests
@@ -13,7 +13,7 @@ import pandas as pd
 
 # Wikipedia keeps an updated table of all the islanders
 # Below will fetch that data and transform it into a pandas dataframe
-def fetch_islanders_from_wikipedia(link="https://en.wikipedia.org/wiki/Love_Island_(2015_TV_series,_series_9)"):
+def fetch_islanders_from_wikipedia(link="https://en.wikipedia.org/wiki/Love_Island_(2015_TV_series,_series_10)"):
     # Data is in a table
     # Inspected table element and found its tag info...
     # ... <table_class="wikitable sortable jquery-tablesorter">
@@ -34,7 +34,7 @@ def fetch_islanders_from_wikipedia(link="https://en.wikipedia.org/wiki/Love_Isla
     return contestants
 
 # This method may need to be updated depending on wikipedia edit
-# https://en.wikipedia.org/wiki/Love_Island_(2015_TV_series,_series_9)
+# https://en.wikipedia.org/wiki/Love_Island_(2015_TV_series,_series_10)
 def clean_islanders_dataframe_from_wikipedia(contestants):
     # Remove nulls and only keep necessary fields
     contestants_clean = contestants.loc[pd.notna(contestants.Islander),
@@ -77,7 +77,7 @@ def clean_islanders_dataframe_from_wikipedia(contestants):
     return contestants_clean
 
 
-def fetch_and_clean_islanders_from_wikipedia(link="https://en.wikipedia.org/wiki/Love_Island_(2015_TV_series,_series_9)",
+def fetch_and_clean_islanders_from_wikipedia(link="https://en.wikipedia.org/wiki/Love_Island_(2015_TV_series,_series_10)",
                                              cleaning_function=lambda df: clean_islanders_dataframe_from_wikipedia(df)):
     return cleaning_function(fetch_islanders_from_wikipedia(link))
 
