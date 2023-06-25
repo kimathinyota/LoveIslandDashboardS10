@@ -149,10 +149,10 @@ class LIDatabaseManager:
         sql += "WHERE createdDate > " + str(ts1)
         if ts2 is not None:
             sql += " AND createdDate < " + str(ts2)
-        return self.execute_query(sql)
+        return self.execute_query(sql), cols
     
     def fetch_all_posts_from(self, start_date):
-        return self.fetch_all_posts(start_date,)
+        return self.fetch_all_posts(start_date, None)
     
     def fetch_posts(self):
         cols = list(POST_SCHEMA.keys())
@@ -186,7 +186,7 @@ class LIDatabaseManager:
         columns = ",".join(cols)
         sql = "SELECT " + columns + " FROM Comment "
         sql += "WHERE PostID IN " + ids
-        return self.execute_query(sql)
+        return self.execute_query(sql), cols
 
     def __init__(self):
         self.is_connected = False
