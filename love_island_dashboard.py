@@ -61,24 +61,22 @@ st.caption('Analysis of Season 9\'s Discussion Threads in r/LoveIslandTV')
 def load_raw_data():
     comment_df, post_df, islanders_df, summaries_df = LIDataLoader.load_raw_data()
     # Adding the reunion to summaries_df
-    reunion_summary = 'On Day 63, all of the islanders were invited for a reunion to discuss their Love Island experiences.'
-    reunion = pd.DataFrame({'Day': [63], 'Type': ['Renunion'], 'Summary': [reunion_summary], 'Islanders': [islanders_df.Islander.to_list()]}).explode('Islanders')
-    summaries_df = pd.concat([summaries_df, reunion])
     discuss_mask = post_df.title.str.contains('Daily Discussion')
     post_mask = post_df.title.str.lower().str.contains('post')
     post_df['type'] = 'PRE'
     post_df.loc[post_mask, 'type'] = 'POST'
     post_df.loc[discuss_mask, 'type'] = 'MID'
     post_df['type'].astype(dtype='category')
+    nicknames_dict = LIDataLoader.load_nicknames()
     
-    return comment_df, post_df, islanders_df, summaries_df
+    return comment_df, post_df, islanders_df, summaries_df, nicknames_dict
 
 data_load_state = st.empty()
 data_load_state.text('Loading data...')
-comment_df, post_df, islanders_df, summaries_df = load_raw_data()
+comment_df, post_df, islanders_df, summaries_df, nicknames_dict = load_raw_data()
 
 
-analyticsLoader = AnalyticsLoader(islanders_df, comment_df)
+analyticsLoader = AnalyticsLoader(islanders_df, comment_df, nicknames_dict)
 
 data_load_state.text('Loading data...done!')
 data_load_state.empty()
@@ -216,7 +214,7 @@ else:
 
 raws_tab.subheader('Islanders')
 raws_tab.write(display_islanders)
-raws_tab.caption('Data extracted from https://en.wikipedia.org/wiki/Love_Island_(2015_TV_series,_series_9)')
+raws_tab.caption('Data extracted from https://en.wikipedia.org/wiki/Love_Island_(2015_TV_series,_series_10)')
 
 raws_tab.subheader('Posts')
 raws_tab.write(display_post)
@@ -228,7 +226,7 @@ raws_tab.caption('Data fetched from r/LoveIslandTV via [PRAW](https://praw.readt
 
 raws_tab.subheader('Events')
 raws_tab.write(display_summaries_df)
-raws_tab.caption('Data extracted from https://en.wikipedia.org/wiki/Love_Island_(2015_TV_series,_series_9)')
+raws_tab.caption('Data extracted from https://en.wikipedia.org/wiki/Love_Island_(2015_TV_series,_series_10)')
 
 
 
