@@ -11,3 +11,10 @@ LoveIslandDashboard/__pycache__/Mentions.cpython-39.pyc
 LoveIslandDashboard/__pycache__/Sentiments.cpython-39.pyc
 .streamlit/secrets.toml
 LoveIslandAnalysis/.DS_Store
+.DS_Store
+setup_to_delete.ipynb
+LoveIslandAnalysis/__pycache__/love_island_database.cpython-39.pyc
+LoveIslandAnalysis/__pycache__/PostFetcher.cpython-39.pyc
+LoveIslandDashboard/.DS_Store
+LoveIslandAnalysis/.DS_Store
+LoveIslandAnalysis/.DS_Store

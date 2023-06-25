@@ -192,7 +192,7 @@ display_post = post_df[['type', 'createdDate', 'title', 'selfText', 'score', 'Au
 display_post.columns =['Type of Discussion Thread', 'Date', 'Title', 'Text', 'Score', 'Author\'s username', 'Permalink', 'Date Inserted (to db)']
 
 display_post['Date'] = pd.to_datetime(display_post['Date'], unit='s')
-display_post['Day'] = (display_post["Date"] - pd.to_datetime('2023-1-16')).dt.days + 1
+display_post['Day'] = (display_post["Date"] - pd.to_datetime('2023-6-10')).dt.days + 1
 display_post['Date Inserted (to db)'] = pd.to_datetime(display_post['Date Inserted (to db)'], unit='s')
 display_post = display_post.loc[:,['Day', 'Type of Discussion Thread', 'Date', 'Title', 'Text', 'Score', 'Author\'s username', 'Permalink', 'Date Inserted (to db)']]
 
