@@ -12,7 +12,7 @@ import itertools
 #   b | 0 | 1 | 1
 #   c | 1 | 0 | 2
 def find_names(search_name_key_dic, text_series):
-    all_words = text_series.str.strip().str.split(expand=True).stack().reset_index(level=1, drop=True)
+    all_words = text_series.str.replace('[^\w\s]','').str.strip().str.split(expand=True).stack().reset_index(level=1, drop=True)
     df = all_words.to_frame('body')
     for name in search_name_key_dic:
         key = search_name_key_dic[name]
