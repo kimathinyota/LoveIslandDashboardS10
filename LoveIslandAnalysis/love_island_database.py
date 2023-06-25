@@ -140,14 +140,19 @@ class LIDatabaseManager:
     def drop_table_sql(self, table):
         return "DROP TABLE " + table + ";"
 
-    def fetch_all_posts(self, start_date, second_date):
+    def fetch_all_posts(self, start_date, end_date):
         cols = list(POST_SCHEMA.keys())
         columns = ",".join(cols)
         ts1 = start_date.timestamp()
-        ts2 = second_date.timestamp()
+        ts2 = None if end_date is None else end_date.timestamp()
         sql = "SELECT " + columns + " FROM Post "
-        sql += "WHERE createdDate > " + str(ts1) + " AND createdDate < " + str(ts2)
+        sql += "WHERE createdDate > " + str(ts1)
+        if ts2 is not None:
+            sql += " AND createdDate < " + str(ts2)
         return self.execute_query(sql)
+    
+    def fetch_all_posts_from(self, start_date):
+        return self.fetch_all_posts(start_date,)
     
     def fetch_posts(self):
         cols = list(POST_SCHEMA.keys())
@@ -160,6 +165,20 @@ class LIDatabaseManager:
         columns = ",".join(cols)
         sql = "SELECT " + columns + " FROM Comment "
         return self.execute_query(sql), cols
+    
+    def fetch_all_comments_by_date(self, start_date, end_date):
+        ts1 = start_date.timestamp()
+        ts2 = None if end_date is None else end_date.timestamp()
+        cols = list(COMMENT_SCHEMA.keys())
+        columns = ",".join(cols)
+        sql = "SELECT " + columns + " FROM Comment "
+        sql += "WHERE createdDate > " + str(ts1) 
+        if ts2 is not None:
+            sql += " AND createdDate < " + str(ts2)
+        return self.execute_query(sql), cols
+    
+    def fetch_all_comments_from(self, start_date):
+        return self.fetch_all_comments_by_date(start_date, None)
 
     def fetch_all_comments_for_posts(self, post_ids):
         ids = "(" + ",".join(post_ids) + ")"
