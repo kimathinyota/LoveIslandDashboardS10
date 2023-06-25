@@ -22,8 +22,8 @@ class AnalyticsLoader:
         return exists(AnalyticsLoader.COMENTIONS_DATA_PATH)
 
 
-    def replace_mentions_data(self):
-        name_series, mentions_over_time = lm.mentions_data(self.islanders_df, self.comments_df)
+    def replace_mentions_data(self, nicknames_dict=None):
+        name_dict, mentions_over_time = lm.mentions_data(self.islanders_df, self.comments_df, nicknames_dict)
         mentions_over_time.to_csv(AnalyticsLoader.MENTIONS_DATA_PATH, index=True)
         return mentions_over_time
 

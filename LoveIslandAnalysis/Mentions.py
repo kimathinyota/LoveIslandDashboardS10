@@ -3,38 +3,42 @@ import numpy as np
 
 import itertools
 
-# For each text in the input text series, it will return the number of (first-name) matches for the input name series
-# For search_name_series of [a: Tom is cool, b: Ronald and James are bad, c: James and Tom are good] 
-# and search_name_series = [T: Tom, R: Ronald, J: James]
+# For each text in the input text series, it will return the number of (first-name) matches for the input search_name_key_dic
+# For text_series of [a: Tom is cool, b: Ronald and James are bad, c: James and Tom and John are good] 
+# and search_name_key_dic = [Tom: R, Ronald: R, James: J, John: J]
 # find_names(..) will return ...
 #  id | T | R | J
 #   a | 1 | 0 | 0
 #   b | 0 | 1 | 1
-#   c | 1 | 0 | 1
-def find_names(search_name_series, text_series):
+#   c | 1 | 0 | 2
+def find_names(search_name_key_dic, text_series):
     all_words = text_series.str.strip().str.split(expand=True).stack().reset_index(level=1, drop=True)
     df = all_words.to_frame('body')
-    for index in search_name_series.index:
-        df[index] = 0
-        name = search_name_series.loc[index]
-        df.loc[all_words == name, index] = 1
+    for name in search_name_key_dic:
+        key = search_name_key_dic[name]
+        if key not in df:
+            df[key] = 0
+        df.loc[all_words == name, key] += 1
     mentions_over_index = df.reset_index(names="id").groupby(by='id').sum(numeric_only=True)
     return mentions_over_index
     
-# Will transform an input series such that its data becomes the new index and exxtracts the first word (of each data entry) for the transformed data
-def generate_search_name_series(islanders_df):
-    name_series = pd.Series(
-        data = islanders_df.Islander.str.split(' ').str.get(0).to_list(),
-        index = islanders_df.Islander.to_list()
-    )
-    return name_series
+# Given a series of islander full names it will extract the first names and return them (as dic) with their full names
+# nicknames_dict is a dictionary of alternative names for islanders e.g. {"Ro": "Ron Hall", "Ronald": "Ron Hall"}
+def generate_search_name_key_dic(islander_full_names_series, nicknames_dict=None):
+    name_dict = pd.Series(
+        index = islander_full_names_series.str.split(' ').str.get(0).to_list(),
+        data = islander_full_names_series.to_list()
+    ).to_dict()
+    if nicknames_dict is not None:
+        name_dict.update(nicknames_dict)
+    return name_dict
 
 # will find the quantity of first-name matches for each islander in each input comment  
-def mentions_data(islanders_df, comment_df):
-    name_series = generate_search_name_series(islanders_df)
-    mentions_over_time = find_names(name_series, comment_df.body)
+def mentions_data(islanders_df, comment_df, nicknames_dict=None):
+    name_dict = generate_search_name_key_dic(islanders_df.Islander, nicknames_dict)
+    mentions_over_time = find_names(name_dict, comment_df.body)
     mentions_over_time['day'] = comment_df['day']
-    return name_series, mentions_over_time
+    return name_dict, mentions_over_time
 
 # Transform input series into a list of its index ordered by its corresponding values
 # [T: 3, R: 0, J: 1] ---> [T, J]
