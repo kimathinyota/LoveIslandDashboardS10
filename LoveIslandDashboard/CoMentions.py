@@ -52,7 +52,7 @@ def create_interactive_influence_graph(filtered_edge_df_by_day, islander_to_cent
 
     pick_name = alt.selection_point(fields=['name'],  value=[{'name': most_central_islander}], empty='none')
     chart_nodes = chart_nodes.encode(
-        opacity = alt.condition(pick_name, alt.value(1.0), alt.value(0.15))
+        opacity = alt.condition(pick_name, alt.value(1.0), alt.value(0.3))
     ).add_params(
         pick_name
     )
