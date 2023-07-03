@@ -35,7 +35,7 @@ def generate_search_name_key_dic(islander_full_names_series, nicknames_dict=None
 
 # will find the quantity of first-name matches for each islander in each input comment  
 def mentions_data(islanders_df, comment_df, nicknames_dict=None):
-    name_dict = generate_search_name_key_dic(islanders_df.Islander, nicknames_dict)
+    name_dict = generate_search_name_key_dic(islanders_df.Islander.drop_duplicates(), nicknames_dict)
     mentions_over_time = find_names(name_dict, comment_df.body)
     mentions_over_time['day'] = comment_df['day']
     return name_dict, mentions_over_time

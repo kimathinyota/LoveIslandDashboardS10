@@ -327,6 +327,7 @@ full_cocurrent_matrix['day'] = mentions_over_time['day']
 
 @st.cache_data
 def edge_matrix_by_day(full_cocurrent_matrix):
+    print([x for x in list(full_cocurrent_matrix.columns) if x[0] == "Molly Marsh" or x[1] == "Molly Marsh"])
     edge_matrix_by_day = full_cocurrent_matrix.groupby('day').sum().unstack().reset_index()
     edge_matrix_by_day.columns = ['x', 'y', 'day', 'weight']
     return edge_matrix_by_day

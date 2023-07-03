@@ -86,9 +86,11 @@ class IslanderEncoder:
 
     @staticmethod
     def unique_islander_code(islanders_df):
+        #print(islanders_df)
+        islanders_df_rem_dup = islanders_df.groupby("Islander").agg(lambda ser: ser.iloc[0]).reset_index()
         # assign based on position it entered
-        first_names = islanders_df.Islander.str.split(' ').str.get(0).str.replace(r'[^a-zA-Z0-9]', '').to_frame('first')
-        first_names['Islander'] = islanders_df.Islander
+        first_names = islanders_df_rem_dup.Islander.str.split(' ').str.get(0).str.replace(r'[^a-zA-Z0-9]', '').to_frame('first')
+        first_names['Islander'] = islanders_df_rem_dup.Islander
         first_names['ShowEntryDay'] = islanders_df.ShowEntryDay
         islander_keys = first_names.sort_values(by=['ShowEntryDay', 'Islander']).Islander.reset_index().Islander.reset_index().set_index('Islander')
         return islander_keys['index']
