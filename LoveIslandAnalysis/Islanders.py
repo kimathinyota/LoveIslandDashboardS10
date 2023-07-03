@@ -48,6 +48,10 @@ def clean_islanders_dataframe_from_wikipedia(contestants):
     # Need to extract just the numeric part
     contestants_clean["ShowEntryDay"] = contestants_clean.Entered.str.extract(r'([0-9]+)').astype('Int64')
 
+    # The Molly Exemption: molly marsh renters as a casa amor contestant on day 27, but it is scraped from wikipedia as 271 
+    contestants_clean["ShowEntryDay"].loc[contestants_clean.ShowEntryDay>200] = contestants_clean["ShowEntryDay"].loc[contestants_clean.ShowEntryDay>200].astype(str).str[:2].astype('Int64')
+
+
     # As it stands: Status is in the form: Participating | Dumped (Day #)
     # Need to extract just the numeric part (but allow for nulls)
     # 'Int64' allows for nulls
@@ -59,9 +63,10 @@ def clean_islanders_dataframe_from_wikipedia(contestants):
     contestants_clean["OnLeaveStatus"] = pd.NA
     contestants_clean.OnLeaveStatus[dumped_mask] = contestants_clean.Status[dumped_mask].str.split(' ').str.get(0)
 
+
     # storing when islanders entered the mainVilla
-    # Casa Amor happens from day 28 to day 32, so any islanders who arrive between these days are Casa Amor islanders
-    casa_mask = (contestants_clean.ShowEntryDay > 27) & (contestants_clean.ShowEntryDay < 32)
+    # Casa Amor happens from day 26 to day 30, so any islanders who arrive between these days are Casa Amor islanders
+    casa_mask = (contestants_clean.ShowEntryDay > 25) & (contestants_clean.ShowEntryDay < 30)
     contestants_clean["MainVillaEntryDay"] = contestants_clean["ShowEntryDay"].copy()
     contestants_clean["MainVillaEntryDay"].loc[casa_mask] = pd.NA
 
