@@ -74,7 +74,7 @@ def clean_islanders_dataframe_from_wikipedia(contestants):
     # Recoupling date happens on day 32
     # The casa contestants not already dumped by day 32 will enter the Main villa on day 32
     not_dumped_casa = casa_mask & pd.isna(contestants_clean.MainVillaEntryDay)
-    contestants_clean["MainVillaEntryDay"].loc[not_dumped_casa] = 32
+    #contestants_clean["MainVillaEntryDay"].loc[not_dumped_casa] = 32
 
     # Entered and Status fields are now redundant
     contestants_clean.drop(columns=['Entered', 'Status'], inplace=True)
