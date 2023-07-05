@@ -26,15 +26,7 @@ def load_raw_data():
     return comment_df, post_df, islanders, summaries
 
 def load_nicknames():
-    nicknames = {
-    "Catherine Agbaje": ["Cath", "Cat"],
-    "Malissa \"Mal\" Nichol": ["Mal"],
-    "Mitchel Taylor": ["Mitch"],
-    "Tyrique Hyde": ["Ty"],
-    "André Furtado": ["Andre"],
-    "Whitney Adebayo": ["Whit"],
-    "Zachariah Noble": ["Zach", "Zack"],
-    "Ruchee Gurung": ["Ruch"]
-    }
-    nicknames_dict = pd.Series(nicknames).explode().reset_index(name="Nickname").set_index("Nickname").iloc[:, 0].to_dict()
+    nicknames = pd.read_csv("LoveIslandDashboard/Data/Islander_s10_nicknames.csv")
+    nicknames_melt = nicknames.melt("Islander", value_name="Nickname")[["Islander", "Nickname"]]
+    nicknames_dict = nicknames_melt.dropna().set_index("Nickname").Islander.to_dict()
     return nicknames_dict
