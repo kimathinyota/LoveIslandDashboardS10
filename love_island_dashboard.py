@@ -95,12 +95,10 @@ moments_tab, mentions_tab, sentiments_tab, connections_tab, special_tab, raws_ta
 #*********** SIDE BAR *************** 
 #************************************ 
 
-islanders = islanders_df.Islander.to_list()
+islanders = list(islanders_df.Islander.unique())
 not_dumped_mask = pd.isna(islanders_df.ShowLeaveDay)
 not_dumped = islanders_df.Islander.loc[not_dumped_mask]
 
-min_number = 8
-default_islanders = islanders_df.sort_values(['ShowLeaveDay'])[::-1].Islander.iloc[:min_number].to_list()
 
 from datetime import datetime
 
@@ -125,6 +123,10 @@ with st.sidebar:
 
     picked_all = islanders
 
+    min_number = 8
+    # default_islanders = islanders_df.sort_values(['ShowLeaveDay'])[::-1].Islander.iloc[:min_number].to_list()
+    default_islanders = iogs
+
     if not pick_all:
 
         strat_picker = st.checkbox('Stratify picker', help='Click to pick by islander type. Note: will reset your current choices')
@@ -139,7 +141,7 @@ with st.sidebar:
             picked_all = st.multiselect("Pick from all islanders", options=islanders, default=default_islanders, format_func=format_func)
 
 
-    picked_islanders = picked_all
+    picked_islanders = list(set(picked_all))
 
     st.markdown("## Day Range")
 
@@ -251,6 +253,7 @@ def day_by_day_mentions(mentions_over_time):
 
 all_day_by_day_mentions = day_by_day_mentions(mentions_over_time)
 addm = all_day_by_day_mentions.loc[:,picked_islanders]
+
 
 mentions_mean_std = all_day_by_day_mentions.loc[picked_days[0]:picked_days[1]+1].agg(['mean', 'std'], axis=1)
 mentions_mean_std['Islanders'] = 'Average'
@@ -401,7 +404,9 @@ def labelled_data(compound_series, neg_limit, pos_limit):
 
 sentiments_over_time = mentions_over_time.iloc[:, :-1]
 
+
 sentiments_over_time.iloc[:, :-1] = np.where(sentiments_over_time.iloc[:, :-1] > 0, True, np.nan if exclude_nan_sentiment else False)
+
 sentiments_over_time = sentiments_over_time.mul(comment_df.compound, axis=0)
 sentiments_over_time['day'] = mentions_over_time.day
 
