@@ -71,8 +71,11 @@ def clean_islanders_dataframe_from_wikipedia(contestants):
     contestants_clean["MainVillaEntryDay"].loc[casa_mask] = pd.NA
 
 
-    # Recoupling date happens on day 32
-    # The casa contestants not already dumped by day 32 will enter the Main villa on day 32
+    # Recoupling date happens on day 31
+    # The casa contestants not already dumped by day 31 will enter the Main villa on day 31
+    contestants_clean["MainVillaEntryDay"].loc[casa_mask & contestants_clean.ShowLeaveDay.isna()] = 31
+
+
     not_dumped_casa = casa_mask & pd.isna(contestants_clean.MainVillaEntryDay)
     #contestants_clean["MainVillaEntryDay"].loc[not_dumped_casa] = 32
 

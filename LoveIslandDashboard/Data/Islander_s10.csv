@@ -1,29 +1,29 @@
 Islander,Age,Hometown,ShowEntryDay,ShowLeaveDay,OnLeaveStatus,MainVillaEntryDay
-Abi Moores,25,Hampshire,27,,,
-Amber Wise,19,Kensington,27,,,
-Benjamin Noel,26,London,26,,,
-Catherine Agbaje,22,Dublin,1,,,1
-Danielle Mazhindu,25,Liverpool,27,,,
+Abi Moores,25,Hampshire,27,,,31
+Amber Wise,19,Kensington,27,,,31
+Catherine Agbaje,22,Tyrrelstown,1,,,1
 Ella Thomas,23,Glasgow,1,,,1
-Elom Ahlijah-Wilson,22,London,26,,,
-"Gabrielle ""Gabby"" Jeffery",24,Tyneside,27,,,
+Elom Ahlijah-Wilson,22,Enfield,26,,,31
 Jess Harding,22,Uxbridge,1,,,1
 Kady McDermott,27,Stevenage,19,,,19
-Kodie Murphy,20,Birmingham,26,,,
 Leah Taylor,27,Manchester,8,,,8
-Lochan Nowacki,25,Windsor,26,,,
+Lochan Nowacki,25,Bermondsey,26,,,31
 Mitchel Taylor,26,Sheffield,1,,,1
 Molly Marsh,21,Doncaster,1,19,Dumped,1
-Molly Marsh,21,Doncaster,27,,,
+Molly Marsh,21,Doncaster,27,,,31
 Montel McKenzie,25,London,16,,,16
-"Ousman ""Ouzy"" See",28,Edinburgh,26,,,
+"Ousman ""Ouzy"" See",28,Edinburgh,26,,,31
 Sammy Root,22,Kent,4,,,4
 Scott van-der-Sluis,22,Connah's Quay,11,,,11
-Tink Reading,26,Birmingham,27,,,
 Tyrique Hyde,24,Grays,1,,,1
 Whitney Adebayo,25,Camden,3,,,3
 Zachariah Noble,25,Lewisham,1,,,1
-Zachary Ashford,27,Manchester,26,,,
+Benjamin Noel,26,London,26,31,Dumped,
+Danielle Mazhindu,25,Liverpool,27,31,Dumped,
+"Gabrielle ""Gabby"" Jeffery",24,Tyneside,27,31,Dumped,
+Kodie Murphy,20,Birmingham,26,31,Dumped,
+Tink Reading,26,Birmingham,27,31,Dumped,
+Zachary Ashford,27,Manchester,26,31,Dumped,
 "Malissa ""Mal"" Nichol",25,Edinburgh,16,23,Dumped,16
 Mehdi Edno,26,Bordeaux,1,23,Dumped,1
 André Furtado,21,Dudley,1,12,Dumped,1
