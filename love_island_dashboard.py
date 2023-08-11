@@ -125,7 +125,7 @@ with st.sidebar:
 
     min_number = 8
     # default_islanders = islanders_df.sort_values(['ShowLeaveDay'])[::-1].Islander.iloc[:min_number].to_list()
-    default_islanders = iogs
+    default_islanders = ifinals
 
     if not pick_all:
 
