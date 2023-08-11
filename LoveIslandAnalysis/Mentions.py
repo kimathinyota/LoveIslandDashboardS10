@@ -11,7 +11,7 @@ import itertools
 #   a | 1 | 0 | 0
 #   b | 0 | 1 | 1
 #   c | 1 | 0 | 2
-def find_names(search_name_key_dic, text_series):
+def find_names_no_spaces(search_name_key_dic, text_series):
     all_words = text_series.str.replace('[^\w\s]','').str.strip().str.split(expand=True).stack().reset_index(level=1, drop=True)
     df = all_words.to_frame('body')
     for name in search_name_key_dic:
@@ -21,6 +21,21 @@ def find_names(search_name_key_dic, text_series):
         df.loc[all_words == name, key] += 1
     mentions_over_index = df.reset_index(names="id").groupby(by='id').sum(numeric_only=True)
     return mentions_over_index
+
+
+def find_names(search_name_key_dic, text_series):
+    nicknames_dict = pd.Series(search_name_key_dic).to_frame('id').reset_index().groupby('id')['index'].agg(list).to_dict()
+    search_keys = nicknames_dict.keys()
+    add_parenth = lambda word: '(' + word + ')'
+    check_regex = r'\b{0}'.format('|'.join(map(add_parenth, map(lambda k: "|".join(map(str.lower, nicknames_dict[k])), search_keys))))
+    search_df = text_series.str.lower().str.extractall(check_regex)
+    search_df.rename(columns=dict(enumerate(search_keys)), inplace=True)
+    search_df.index.set_names(['id', 'match'], inplace=True)
+    search_df.reset_index(inplace=True)
+    search_df.drop('match', axis=1, inplace=True)
+    return search_df.groupby('id').agg(lambda series: sum(series.notna()))
+
+
     
 # Given a series of islander full names it will extract the first names and return them (as dic) with their full names
 # nicknames_dict is a dictionary of alternative names for islanders e.g. {"Ro": "Ron Hall", "Ronald": "Ron Hall"}
@@ -35,7 +50,7 @@ def generate_search_name_key_dic(islander_full_names_series, nicknames_dict=None
 
 # will find the quantity of first-name matches for each islander in each input comment  
 def mentions_data(islanders_df, comment_df, nicknames_dict=None):
-    name_dict = generate_search_name_key_dic(islanders_df.Islander.drop_duplicates(), nicknames_dict)
+    name_dict = nicknames_dict
     mentions_over_time = find_names(name_dict, comment_df.body)
     mentions_over_time['day'] = comment_df['day']
     return name_dict, mentions_over_time
