@@ -145,7 +145,8 @@ with st.sidebar:
 
     st.markdown("## Day Range")
 
-    last_day = (datetime.fromtimestamp(comment_df.createdDate.max()) - datetime(2023, 1, 16)).days
+
+    last_day = (datetime.fromtimestamp(comment_df.createdDate.max()) - datetime(2023, 6, 5)).days + 1
 
     picked_days = (1, last_day)
     
@@ -192,7 +193,7 @@ display_post = post_df[['type', 'createdDate', 'title', 'selfText', 'score', 'Au
 display_post.columns =['Type of Discussion Thread', 'Date', 'Title', 'Text', 'Score', 'Author\'s username', 'Permalink', 'Date Inserted (to db)']
 
 display_post['Date'] = pd.to_datetime(display_post['Date'], unit='s')
-display_post['Day'] = (display_post["Date"] - pd.to_datetime('2023-6-10')).dt.days + 1
+display_post['Day'] = (display_post["Date"] - pd.to_datetime('2023-6-05')).dt.days + 1
 display_post['Date Inserted (to db)'] = pd.to_datetime(display_post['Date Inserted (to db)'], unit='s')
 display_post = display_post.loc[:,['Day', 'Type of Discussion Thread', 'Date', 'Title', 'Text', 'Score', 'Author\'s username', 'Permalink', 'Date Inserted (to db)']]
 
@@ -246,6 +247,7 @@ def mentions_data():
     return analyticsLoader.load_mentions_data(use_cache=True)
 
 mentions_over_time = mentions_data()
+
 
 @st.cache_data
 def day_by_day_mentions(mentions_over_time):
@@ -493,23 +495,36 @@ with moments_tab.expander('About'):
     st.markdown('The Highs are the top three day block (as chosen in options) that generated the highest total mentions (or mean sentiment, if selected in options) for the chosen (in sidebar) islanders and date range. By contrast, the Lows are the bottom three ones.')
     
 
+
 with moments_tab.expander('Options'):
     granuality = st.slider("Maximum size of day block: e.g. 7 for weekly (approx.) blocks", 1, int(max_bins/3), 3, 1)
     is_sentiments = st.checkbox('What about the vibes tho?', help='Switch to showing highest and lowest sentiment days')
 
 
 
-bottom_mentions['binned'] = pd.cut(bottom_mentions['day'], int(max_bins/granuality), duplicates='drop', ordered=True)
+
+
+
+#['binned'] = pd.cut(bottom_mentions['day'], np.arange(sB-0.5, eB, granuality))
+
+bottom_mentions = bottom_mentions.sort_values('day').reset_index(drop=True).reset_index(names='Order')
+
+sB, eB = 0, len(bottom_mentions) + 1
+bottom_mentions['binned'] = pd.cut(bottom_mentions['Order'], np.arange(sB-0.5, eB + granuality, granuality))
 bottom_sentiments['binned'] = pd.cut(bottom_sentiments['day'], int(max_bins/granuality), duplicates='drop', ordered=True)
 
 limited_reduced = reduced_summaries_df2[['Type', 'Summary', 'day', 'Mean', 'Islanders']]
 
 limited_reduced = limited_reduced.sort_values(by='day')
 
+
+#print(bottom_mentions)
 # moments_tab.write(limited_reduced)
 
 groups = bottom_mentions.groupby(['binned']).agg({'day': list, 'Mean': 'sum'}).reset_index()[['day', 'Mean']].sort_values(by='Mean')
+groups = groups.loc[groups.day.str.len() > 0]
 sgroups = bottom_sentiments.groupby(['binned']).agg({'day': list, 'Mean': 'mean'}).reset_index()[['day', 'Mean']].sort_values(by='Mean')
+sgroups = sgroups.loc[sgroups.day.str.len() > 0]
 
 
 
@@ -543,6 +558,8 @@ if len(select_group(is_sentiments).index) >= 3:
 
     first, second, third = select_group(is_sentiments).iloc[-1], select_group(is_sentiments).iloc[-2], select_group(is_sentiments).iloc[-3]
     first_records, second_records, third_records = (moment_records(x) for x in [first, second, third])
+
+    print(select_group(False))
 
     stat_title = "Average Sentiment: " if is_sentiments else "Total Mentions: "
 
@@ -630,7 +647,17 @@ else:
 melt_filtered_day_by_day_mentions = filtered_day_by_day_mentions.reset_index().melt(id_vars=['day'], value_name='Total Mentions', var_name='Islanders')
 
 
-with_exit_days = melt_filtered_day_by_day_mentions.merge(right=islanders_df[['Islander', 'ShowLeaveDay']], how='left', left_on='Islanders', right_on='Islander')
+
+# The Molly Marsh exemption: she left the show twice, below will only consider the last 
+
+not_molly_mask = islanders_df.Islander != 'Molly Marsh'
+exclude_wrong_molly_mask = not_molly_mask | (~not_molly_mask & (islanders_df.ShowLeaveDay > 40))
+
+print(islanders_df.loc[exclude_wrong_molly_mask, ['Islander', 'ShowLeaveDay']])
+#with_exit_days = melt_filtered_day_by_day_mentions.merge(right=islanders_df[['Islander', 'ShowLeaveDay']], how='left', left_on='Islanders', right_on='Islander')
+
+
+with_exit_days = melt_filtered_day_by_day_mentions.merge(right=islanders_df.loc[exclude_wrong_molly_mask, ['Islander', 'ShowLeaveDay']], how='left', left_on='Islanders', right_on='Islander')
 
 
 post_villa_day_title = "Number of days post villa"
@@ -642,7 +669,7 @@ melt_day_by_day_mentions = all_day_by_day_mentions.loc[picked_days[0]:picked_day
 
 
 
-melt_day_by_day_mentions_with_exit_days = melt_day_by_day_mentions.merge(right=islanders_df[['Islander', 'ShowLeaveDay']], how='left', left_on='Islanders', right_on='Islander')
+melt_day_by_day_mentions_with_exit_days = melt_day_by_day_mentions.merge(right=islanders_df.loc[exclude_wrong_molly_mask, ['Islander', 'ShowLeaveDay']], how='left', left_on='Islanders', right_on='Islander')
 melt_day_by_day_mentions_with_exit_days[post_villa_day_title] = melt_day_by_day_mentions_with_exit_days['day'] - melt_day_by_day_mentions_with_exit_days['ShowLeaveDay']
 post_villa_mentions_mean_std = melt_day_by_day_mentions_with_exit_days.groupby(post_villa_day_title).agg({'Total Mentions': ['mean', 'std']})
 post_villa_mentions_mean_std.columns = ['mean', 'std']
