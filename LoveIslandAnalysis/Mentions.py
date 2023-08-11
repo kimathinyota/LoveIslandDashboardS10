@@ -26,9 +26,9 @@ def find_names_no_spaces(search_name_key_dic, text_series):
 def find_names(search_name_key_dic, text_series):
     nicknames_dict = pd.Series(search_name_key_dic).to_frame('id').reset_index().groupby('id')['index'].agg(list).to_dict()
     search_keys = nicknames_dict.keys()
-    add_parenth = lambda word: '(' + word + '\'|\b)'
-    check_regex = r'\b{0}'.format('|'.join(map(add_parenth, map(lambda k: "|".join(map(str.lower, nicknames_dict[k])), search_keys))))
-    search_df = text_series.str.lower().str.extractall(check_regex)
+    add_parenth = lambda word: r'(' + word + r')'
+    check_regex = r'\b{0}\b'.format('|'.join(map(add_parenth, map(lambda k: "|".join(nicknames_dict[k]), search_keys))))
+    search_df = text_series.str.extractall(check_regex)
     search_df.rename(columns=dict(enumerate(search_keys)), inplace=True)
     search_df.index.set_names(['id', 'match'], inplace=True)
     search_df.reset_index(inplace=True)
