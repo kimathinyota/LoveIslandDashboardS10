@@ -332,7 +332,6 @@ full_cocurrent_matrix['day'] = mentions_over_time['day']
 
 @st.cache_data
 def edge_matrix_by_day(full_cocurrent_matrix):
-    print([x for x in list(full_cocurrent_matrix.columns) if x[0] == "Molly Marsh" or x[1] == "Molly Marsh"])
     edge_matrix_by_day = full_cocurrent_matrix.groupby('day').sum().unstack().reset_index()
     edge_matrix_by_day.columns = ['x', 'y', 'day', 'weight']
     return edge_matrix_by_day
@@ -518,7 +517,6 @@ limited_reduced = reduced_summaries_df2[['Type', 'Summary', 'day', 'Mean', 'Isla
 limited_reduced = limited_reduced.sort_values(by='day')
 
 
-#print(bottom_mentions)
 # moments_tab.write(limited_reduced)
 
 groups = bottom_mentions.groupby(['binned']).agg({'day': list, 'Mean': 'sum'}).reset_index()[['day', 'Mean']].sort_values(by='Mean')
@@ -558,8 +556,6 @@ if len(select_group(is_sentiments).index) >= 3:
 
     first, second, third = select_group(is_sentiments).iloc[-1], select_group(is_sentiments).iloc[-2], select_group(is_sentiments).iloc[-3]
     first_records, second_records, third_records = (moment_records(x) for x in [first, second, third])
-
-    print(select_group(False))
 
     stat_title = "Average Sentiment: " if is_sentiments else "Total Mentions: "
 
@@ -653,7 +649,6 @@ melt_filtered_day_by_day_mentions = filtered_day_by_day_mentions.reset_index().m
 not_molly_mask = islanders_df.Islander != 'Molly Marsh'
 exclude_wrong_molly_mask = not_molly_mask | (~not_molly_mask & (islanders_df.ShowLeaveDay > 40))
 
-print(islanders_df.loc[exclude_wrong_molly_mask, ['Islander', 'ShowLeaveDay']])
 #with_exit_days = melt_filtered_day_by_day_mentions.merge(right=islanders_df[['Islander', 'ShowLeaveDay']], how='left', left_on='Islanders', right_on='Islander')
 
 
