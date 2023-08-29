@@ -308,6 +308,8 @@ if len(picked_islanders) > 0:
         combined_chart = alt.vconcat(mentions_totals_bar_chart, mentions_rule_chart + mentions_line_graph)
 
     mentions_tab.altair_chart(combined_chart, True)
+
+    
 else:
     mentions_tab.error("Please select at least 1 islander")
 
@@ -378,7 +380,10 @@ if len(picked_islanders) > 1:
     
     interactive_influence_graph_and_donut = create_interactive_influence_graph(filtered_edge_df_by_day, full_centrality, picked_islanders)
     if interactive_influence_graph_and_donut is not None:
-        connections_tab.altair_chart(interactive_influence_graph_and_donut, True)
+        try:
+            connections_tab.altair_chart(interactive_influence_graph_and_donut, True)
+        except:
+            connections_tab.error("Error has occurred loading graph")
     else:
         connections_tab.error("None of the chosen islanders are mentioned alongside each other")
 else:
@@ -454,7 +459,9 @@ if len(picked_islanders) > 0:
     else:
         combined_chart = alt.vconcat(totals_sentiment_bar_chart, sentiments_rule_chart + sentiment_line_graph)
 
+    
     sentiments_tab.altair_chart(combined_chart, True)
+
 else:
     sentiments_tab.error("Please select at least 1 islander")
 
@@ -695,7 +702,8 @@ if len(with_exit_days) > 0:
     if not include_post_average:
         special_tab.altair_chart(alt.vconcat(mentions_totals_bar_chart, mentions_line_graph), True)
     else:
-        special_tab.altair_chart(alt.vconcat(mentions_totals_bar_chart, mentions_line_graph + chart), True)
+        special_tab.altair_chart(alt.vconcat(mentions_totals_bar_chart, mentions_line_graph + chart), True)       
+        
 
 else:
     special_tab.error('No data found within your selections')
