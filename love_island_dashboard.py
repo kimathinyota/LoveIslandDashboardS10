@@ -321,7 +321,7 @@ else:
 
 
 
-from LoveIslandDashboard.CoMentions import create_interactive_influence_graph, standardise_edges_dataframe
+from LoveIslandDashboard.CoMentions import create_interactive_influence_graph, standardise_edges_dataframe, draw_graphs
 
 @st.cache_data
 def full_cocurrent_matrix_from_mentions():
